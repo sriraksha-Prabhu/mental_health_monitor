@@ -3,8 +3,8 @@ import pyttsx3
 import speech_recognition as sr
 
 # Set your Gemini API key
-API_KEY = "AIzaSyBnalPeCH1ZsClB_7-AFRhpLZC64hMuXwQ"  # Replace with your Gemini API key
-API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+API_KEY = "  # Replace with your Gemini API key"
+API_URL = "Replace with your Gemini API key url"
 
 # Initialize the text-to-speech engine
 engine = pyttsx3.init()
