@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Virtual Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Welcome, {{ username }}! </h1>
+        <p>Welcome to your personal assistant. Choose a feature below:</p>
+
+        <div class="feature-buttons">
+            <a href="/chat" class="feature-button">Chat with Companion</a>
+            <a href="/speech" class="feature-button">Speech Assistant</a>
+            <a href="/about" class="feature-button">About Us</a>
+            <a href="/reviews" class="feature-button">Leave a Review</a>
+        </div>
+
+        <a href="/logout">Logout</a>
+    </div>
+</body>
+</html>

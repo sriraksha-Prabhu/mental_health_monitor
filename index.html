@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .review-form {
+            margin-bottom: 20px;
+        }
+        .review-form input, .review-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .review-list {
+            margin-top: 30px;
+        }
+        .review-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .review-item p {
+            margin: 0;
+        }
+        .review-item .name {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Submit Your Review</h1>
+
+    <!-- Review submission form -->
+    <div class="review-form">
+        <form action="/submit_review" method="POST">
+            <input type="text" name="reviewer_name" placeholder="Your Name" required>
+            <textarea name="review_text" placeholder="Your Review" required></textarea>
+            <button type="submit">Submit Review</button>
+        </form>
+    </div>
+
+    <!-- Display submitted reviews -->
+    <div class="review-list">
+        <h2>Reviews:</h2>
+        {% if reviews %}
+            {% for review in reviews %}
+                <div class="review-item">
+                    <p class="name">{{ review.name }} says:</p>
+                    <p>{{ review.review }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No reviews yet. Be the first to leave a review!</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

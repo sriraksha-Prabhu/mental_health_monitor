@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Assistant</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web-speech-api/1.0.3/web-speech-api.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .input-box {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #response {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speech Assistant</h1>
+    <div class="input-box">
+        <button onclick="startSpeechRecognition()">Speak to Assistant</button>
+        <button onclick="stopSpeech()">Stop Speech</button>
+    </div>
+    <div id="response"></div>
+
+    <script>
+        let recognition;
+        let speaking = false;
+
+        function startSpeechRecognition() {
+            if (recognition && recognition.abort) {
+                recognition.abort();
+            }
+            
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.interimResults = true;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                $('#response').text('You said: ' + transcript);  // Display what the user said
+                
+                if (event.results[0].isFinal) {
+                    processUserInput(transcript);
+                }
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+            };
+
+            recognition.onend = function() {
+                // Restart recognition when it ends to keep the conversation going
+                if (speaking) {
+                    startSpeechRecognition();
+                }
+            };
+        }
+
+        function processUserInput(userInput) {
+            $.ajax({
+                url: '/talk',
+                type: 'POST',
+                data: { user_input: userInput },
+                success: function(response) {
+                    $('#response').text('Assistant: ' + response.response);  // Display assistant's response
+                    speakResponse(response.response);  // Convert text response to speech
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        function speakResponse(text) {
+            // Check for Speech Synthesis API support
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.onend = function() {
+                    // After speaking, start listening again
+                    if (speaking) {
+                        startSpeechRecognition();
+                    }
+                };
+                speechSynthesis.speak(utterance);
+                speaking = true;  // Set speaking to true to keep the loop going
+            } else {
+                console.error('Speech synthesis not supported in this browser.');
+            }
+        }
+
+        function stopSpeech() {
+            if (recognition) {
+                recognition.stop();  // Stop recognition
+                speechSynthesis.cancel();  // Stop speech synthesis
+                speaking = false;  // Set speaking to false to stop the loop
+                $('#response').text('Speech assistant stopped.');
+            }
+        }
+    </script>
+</body>
+</html>
