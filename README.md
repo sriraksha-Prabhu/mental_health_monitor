@@ -9,7 +9,7 @@ This project is a web-based mental health monitoring tool featuring a talkative 
 -  Web interface for easy access and interaction
 -  Mental wellness-focused prompts and responses
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Flask (Python)
